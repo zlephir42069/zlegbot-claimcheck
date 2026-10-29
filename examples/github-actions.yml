@@ -1,0 +1,33 @@
+# Verify a claims file in CI.
+#
+# Copy this file to .github/workflows/claimcheck.yml. Commit the claims
+# file with environment references only. Put tokens in the CI secret store,
+# not in the workflow file.
+#
+# `validate` does not fetch URLs or run commands. `run` does both, and
+# exits 0 only when every claim is PASS.
+
+name: claimcheck
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install .
+      - name: Validate
+        run: claimcheck validate claims.yaml
+      - name: Run
+        run: claimcheck run claims.yaml --json
+        env:
+          CLAIMCHECK_URL: ${{ secrets.CLAIMCHECK_URL }}

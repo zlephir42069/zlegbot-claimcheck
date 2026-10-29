@@ -1,0 +1,56 @@
+# Copy to claims.yaml and edit the paths. Secrets stay in the environment.
+# Paths are relative to this file's directory unless `root` is set, or you
+# pass --root. Quote patterns, hashes, and timestamps. ${NAME} is replaced
+# when the file loads; write $${NAME} when a command must see a literal ${NAME}.
+#
+# `claimcheck validate` does not open these paths, run the command, or use
+# the network. `claimcheck run` does. command_exit runs through the shell.
+
+root: .
+timeout: 30
+
+claims:
+  - name: readme
+    type: file_exists
+    path: README.md
+
+  - name: readme_hash
+    type: file_md5
+    path: README.md
+    # Replace with the real digest. This is the MD5 of an empty file.
+    md5: d41d8cd98f00b204e9800998ecf8427e
+
+  - name: title
+    type: file_contains
+    path: README.md
+    pattern: '(?m)^# '
+
+  - name: version
+    type: json_path_equals
+    path: examples/sample.json
+    json_path: /version
+    equals: "0.1.0"
+
+  - name: rows
+    type: line_count
+    path: examples/rows.csv
+    min_rows: 2
+    skip_blank: true
+
+  - name: health
+    type: url_status
+    url: https://example.com/health
+    status: 200
+    timeout: 10
+
+  - name: note
+    type: command_exit
+    run: python -c "print('ok')"
+    exit: 0
+    stdout: '^ok'
+    timeout: 10
+
+  - name: fresh
+    type: mtime_after
+    path: README.md
+    after: "2020-01-01T00:00:00Z"

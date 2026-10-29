@@ -1,0 +1,17 @@
+Agent report
+
+Created README.md and updated src/app.py.
+Wrote `docs/guide.md`.
+
+md5 of src/app.py is 0123456789abcdef0123456789abcdef
+
+MD5 (README.md) = abcdef0123456789abcdef0123456789
+
+fedcba9876543210fedcba9876543210  notes/today.txt
+
+file: data/out.csv
+path: ./output.log
+
+See https://example.com/docs/readme.md for the public page.
+user@example.com is an address, not a file.
+The package version is 1.2.3.
